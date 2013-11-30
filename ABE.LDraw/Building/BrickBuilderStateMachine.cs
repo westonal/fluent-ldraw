@@ -16,11 +16,32 @@ namespace ABE.LDraw.Building
 
         private void PlaceBrick()
         {
-            if (_counter > 0 && _counter >= MinLength && _currentColor.HasValue)
+            if (_counter >= MinLength && _currentColor.HasValue)
             {
-                _brickPlacer.Place(_posCounter - _counter, _counter, _currentColor.Value);
+                var localCounter = _counter;
+                while (localCounter > 0 && localCounter >= MinLength)
+                {
+                    if (TryPlaceBrick(localCounter))
+                    {
+                        _counter -= localCounter;
+                        break;
+                    }
+                    else
+                    {
+                        //move back
+                        localCounter--;
+                    }
+                }
             }
-            _counter = 0;
+            else
+            {
+                _counter = 0;
+            }
+        }
+
+        private bool TryPlaceBrick(int counter)
+        {
+            return _brickPlacer.Place(_posCounter - _counter, counter, _currentColor.Value);
         }
 
         public void EndPlacement()

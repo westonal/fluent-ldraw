@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building\LineClash\LineClashDetector.cs" />
+    <Compile Include="Building\LineClash\LineRecord.cs" />
     <Compile Include="File\BrickBuilder.cs" />
     <Compile Include="Building\BrickBuilderStateMachine.cs" />
     <Compile Include="File\BrickColor.cs" />

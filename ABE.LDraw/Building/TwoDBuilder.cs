@@ -8,12 +8,20 @@ namespace ABE.LDraw.Building
     {
         private BrickColor?[,] _array;
         private int _height;
+        private readonly LineClash.LineClashDetector _thisLinesDetector = new LineClash.LineClashDetector();
+        private readonly LineClash.LineClashDetector _previousLinesDetector;
 
-        public TwoDBuilder(int x, int z, int height)
+        public TwoDBuilder(int x, int z, int height, TwoDBuilder previousLine)
         {
             _array = new BrickColor?[x, z];
             _height = height;
             MaxLength = 2;
+            _previousLinesDetector = previousLine == null ? new LineClash.LineClashDetector() : previousLine._thisLinesDetector;
+        }
+
+        public TwoDBuilder(int x, int z, int height)
+            : this(x, z, height, null)
+        {
         }
 
         public BrickColor? this[int studX, int studZ]
@@ -65,9 +73,11 @@ namespace ABE.LDraw.Building
             private readonly int _fixedParam;
             private readonly bool _fixedIsX;
             private readonly Dictionary<int, Bricks.BrickFormat> _bricks;
+            private readonly TwoDBuilder _owner;
 
-            public Placer(IBrickBuilder brick, BrickColor?[,] array, LDU height, Dictionary<int, Bricks.BrickFormat> bricks, int fixedParam, bool fixedIsX)
+            public Placer(IBrickBuilder brick, TwoDBuilder owner, BrickColor?[,] array, LDU height, Dictionary<int, Bricks.BrickFormat> bricks, int fixedParam, bool fixedIsX)
             {
+                _owner = owner;
                 _brick = brick;
                 _tempArray = array;
                 _height = height;
@@ -76,11 +86,20 @@ namespace ABE.LDraw.Building
                 _fixedIsX = fixedIsX;
             }
 
-            public void Place(int pos, int length, BrickColor color)
+            public bool Place(int pos, int length, BrickColor color)
             {
                 //select brick to use based on length
                 var brick = _bricks[length];
                 _brick.File(brick).Color(color);
+
+                var line = _fixedIsX ? LineClash.LineRecord.Vert(_fixedParam, pos + length) :
+                    LineClash.LineRecord.Hoz(pos + length, _fixedParam);
+                if (_owner._previousLinesDetector.Contains(line))
+                {
+                    return false;
+                }
+
+                _owner._thisLinesDetector.Add(line);
 
                 if (_fixedIsX)
                 {
@@ -106,6 +125,8 @@ namespace ABE.LDraw.Building
                         }
                     }
                 }
+
+                return true;
             }
         }
 
@@ -131,7 +152,7 @@ namespace ABE.LDraw.Building
         { 3, Bricks.P_3x2 },
         { 4, Bricks.P_4x2 } };
 
-        private static void FillMax(LdrFileBuilder file, BrickColor?[,] array, LDU height, int maxLength, Dictionary<int, Bricks.BrickFormat> bricks)
+        private void FillMax(LdrFileBuilder file, BrickColor?[,] array, LDU height, int maxLength, Dictionary<int, Bricks.BrickFormat> bricks)
         {
             var brick = file.NewBrickBuilder();
 
@@ -139,7 +160,7 @@ namespace ABE.LDraw.Building
 
             for (int z = 0; z <= array.GetUpperBound(1); z += step)
             {
-                var placer = new Placer(brick, array, height, bricks, z, false);
+                var placer = new Placer(brick, this, array, height, bricks, z, false);
 
                 //state machine
                 var builder = new BrickBuilderStateMachine(placer) { MaxLength = maxLength, MinLength = 2 };
@@ -167,7 +188,7 @@ namespace ABE.LDraw.Building
             }
         }
 
-        private static void FillMaxRotate(LdrFileBuilder file, BrickColor?[,] array, LDU height, int maxLength, Dictionary<int, Bricks.BrickFormat> bricks)
+        private void FillMaxRotate(LdrFileBuilder file, BrickColor?[,] array, LDU height, int maxLength, Dictionary<int, Bricks.BrickFormat> bricks)
         {
             var brick = file.NewBrickBuilder().RotateY(90);
 
@@ -175,7 +196,7 @@ namespace ABE.LDraw.Building
 
             for (int x = 0; x <= array.GetUpperBound(0); x += step)
             {
-                var placer = new Placer(brick, array, height, bricks, x, true);
+                var placer = new Placer(brick, this, array, height, bricks, x, true);
 
                 //state machine
                 var builder = new BrickBuilderStateMachine(placer) { MaxLength = maxLength, MinLength = 2 };

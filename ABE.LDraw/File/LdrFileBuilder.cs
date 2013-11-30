@@ -14,6 +14,11 @@ namespace ABE.LDraw.File
             return _elements.SelectMany(x => x.Build()).ToArray();
         }
 
+        public string[] BuildWithoutComments()
+        {
+            return _elements.Where(e => !(e is Comment)).SelectMany(x => x.Build()).ToArray();
+        }
+
         public ILdrFileBuilder Add(LdrFileElementBuilder element)
         {
             _elements.Add(element);

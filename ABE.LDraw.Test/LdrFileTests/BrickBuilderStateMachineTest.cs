@@ -15,6 +15,7 @@ namespace ABE.LDraw.Test.LdrFileTests
         public void Setup()
         {
             _mockPlacer = new Mock<IBrickPlacer>();
+            _mockPlacer.Setup(e => e.Place(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<BrickColor>())).Returns(true);
             _stateMachine = new BrickBuilderStateMachine(_mockPlacer.Object) { MaxLength = 2 };
         }
 
