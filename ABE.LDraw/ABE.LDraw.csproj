@@ -55,6 +55,7 @@
     <Compile Include="File\LdrFileElementBuilder.cs" />
     <Compile Include="Building\ThreeDBuilder.cs" />
     <Compile Include="Building\TwoDBuilder.cs" />
+    <Compile Include="File\OtherFile.cs" />
     <Compile Include="LDU.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

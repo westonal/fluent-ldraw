@@ -75,5 +75,24 @@ namespace ABE.LDraw.Test.LdrFileTests.LineClashTests
             var lines = _file.BuildWithoutComments();
             Assert.AreEqual(5, lines.Length);
         }
+
+        [TestMethod]
+        public void Different_length_on_x()
+        {
+            for (int y = 0; y < 2; y++)
+            {
+                for (int i = 0; i < (y == 0 ? 5 : 4); i++)
+                {
+                    _builder[i, y, 2] = BrickColor.Red;
+                }
+            }
+
+            _builder.BuildTo(_file);
+
+            Save("Different_length_on_x");
+
+            var lines = _file.BuildWithoutComments();
+            Assert.AreEqual(3, lines.Length);
+        }
     }
 }

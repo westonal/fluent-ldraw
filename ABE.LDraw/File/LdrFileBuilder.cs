@@ -25,6 +25,12 @@ namespace ABE.LDraw.File
             return this;
         }
 
+        public ILdrFileBuilder AddFile(string fileName)
+        {
+            _elements.Add(OtherFile.IncludeFile(fileName));
+            return this;
+        }
+
         public ILdrFileBuilder Comment(string comment)
         {
             return Add(new Comment(comment));

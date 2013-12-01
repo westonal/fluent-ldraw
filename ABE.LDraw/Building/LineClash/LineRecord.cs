@@ -5,7 +5,7 @@
         private int _x;
         private int _z;
         private Dir _dir;
-        private enum Dir { Hoz, Vert }
+        private enum Dir { X, Z }
 
         private LineRecord(int x, int z, Dir dir)
         {
@@ -14,14 +14,14 @@
             _dir = dir;
         }
 
-        public static LineRecord Hoz(int x, int z)
+        public static LineRecord XFacing(int x, int z)
         {
-            return new LineRecord(x, z, Dir.Hoz);
+            return new LineRecord(x, z, Dir.X);
         }
 
-        public static LineRecord Vert(int x, int z)
+        public static LineRecord YFacing(int x, int z)
         {
-            return new LineRecord(x, z, Dir.Vert);
+            return new LineRecord(x, z, Dir.Z);
         }
 
         public override bool Equals(object obj)
@@ -39,9 +39,8 @@
         {
             var hash = _x;
             hash = hash * 31 + _z;
-            hash = hash * 31 + (_dir == Dir.Hoz ? 1 : 2);
+            hash = hash * 31 + (_dir == Dir.X ? 1 : 2);
             return hash;
         }
-
     }
 }

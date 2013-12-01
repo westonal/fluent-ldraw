@@ -12,6 +12,11 @@ namespace ABE.LDraw.File
             _strings = strings.ToArray();
         }
 
+        public Constant(string str)
+        {
+            _strings = new[] { str };
+        }
+
         internal override IEnumerable<string> Build()
         {
             return _strings;

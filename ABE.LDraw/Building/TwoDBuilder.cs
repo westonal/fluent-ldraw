@@ -92,8 +92,8 @@ namespace ABE.LDraw.Building
                 var brick = _bricks[length];
                 _brick.File(brick).Color(color);
 
-                var line = _fixedIsX ? LineClash.LineRecord.Vert(_fixedParam, pos + length) :
-                    LineClash.LineRecord.Hoz(pos + length, _fixedParam);
+                var line = _fixedIsX ? LineClash.LineRecord.YFacing(_fixedParam, pos + length) :
+                    LineClash.LineRecord.XFacing(pos + length, _fixedParam);
                 if (_owner._previousLinesDetector.Contains(line))
                 {
                     return false;

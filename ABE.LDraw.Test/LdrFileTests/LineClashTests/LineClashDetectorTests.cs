@@ -21,51 +21,51 @@ namespace ABE.LDraw.Test.LdrFileTests.LineClashTests
         [TestMethod]
         public void Does_detect_clash()
         {
-            _detector.Add(LineRecord.Hoz(3, 4));
-            Assert.IsTrue(_detector.Contains(LineRecord.Hoz(3, 4)));
+            _detector.Add(LineRecord.XFacing(3, 4));
+            Assert.IsTrue(_detector.Contains(LineRecord.XFacing(3, 4)));
         }
 
         [TestMethod]
         public void Default_does_not_detect_clash()
         {
-            Assert.IsFalse(_detector.Contains(LineRecord.Hoz(3, 4)));
+            Assert.IsFalse(_detector.Contains(LineRecord.XFacing(3, 4)));
         }
 
         [TestMethod]
         public void Does_detect_clash_miss_by_x()
         {
-            _detector.Add(LineRecord.Hoz(3, 4));
-            Assert.IsFalse(_detector.Contains(LineRecord.Hoz(4, 4)));
+            _detector.Add(LineRecord.XFacing(3, 4));
+            Assert.IsFalse(_detector.Contains(LineRecord.XFacing(4, 4)));
         }
 
         [TestMethod]
         public void Does_detect_clash_miss_by_z()
         {
-            _detector.Add(LineRecord.Hoz(3, 5));
-            Assert.IsFalse(_detector.Contains(LineRecord.Hoz(3, 4)));
+            _detector.Add(LineRecord.XFacing(3, 5));
+            Assert.IsFalse(_detector.Contains(LineRecord.XFacing(3, 4)));
         }
 
         [TestMethod]
         public void Does_detect_clash_miss_by_dir()
         {
-            _detector.Add(LineRecord.Hoz(3, 5));
-            Assert.IsFalse(_detector.Contains(LineRecord.Vert(3, 5)));
+            _detector.Add(LineRecord.XFacing(3, 5));
+            Assert.IsFalse(_detector.Contains(LineRecord.YFacing(3, 5)));
         }
 
         [TestMethod]
         public void Does_detect_clash_multiple_records()
         {
-            _detector.Add(LineRecord.Hoz(3, 4));
-            _detector.Add(LineRecord.Hoz(3, 5));
-            Assert.IsTrue(_detector.Contains(LineRecord.Hoz(3, 4)));
+            _detector.Add(LineRecord.XFacing(3, 4));
+            _detector.Add(LineRecord.XFacing(3, 5));
+            Assert.IsTrue(_detector.Contains(LineRecord.XFacing(3, 4)));
         }
 
         [TestMethod]
         public void Does_detect_clash_multiple_records_second()
         {
-            _detector.Add(LineRecord.Hoz(3, 4));
-            _detector.Add(LineRecord.Hoz(3, 5));
-            Assert.IsTrue(_detector.Contains(LineRecord.Hoz(3, 5)));
+            _detector.Add(LineRecord.XFacing(3, 4));
+            _detector.Add(LineRecord.XFacing(3, 5));
+            Assert.IsTrue(_detector.Contains(LineRecord.XFacing(3, 5)));
         }
     }
 }
